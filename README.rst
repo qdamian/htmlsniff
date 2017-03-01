@@ -52,9 +52,9 @@ Or we have a client consuming such web service, using Requests_:
     import requests
     import time
 
-    requests.get('http://127.0.0.1:8081/hello/htmlsniff'))
+    requests.get('http://127.0.0.1:8080/hello/htmlsniff'))
     time.sleep(10)
-    requests.get('http://127.0.0.1:8081/bye'))
+    requests.get('http://127.0.0.1:8080/bye'))
 
 We can use htmlsniff to generate a PlantUML_ sequence diagram showing the HTTP
 transactions between the client and the server.
@@ -68,9 +68,9 @@ We can achieve this client side, e.g.:
     import time
 
     requests_sniffer = htmlsniff.RequestsSniffer(client_name="browser")
-    requests.get('http://127.0.0.1:8081/hello/htmlsniff'), hooks={'response': requests_sniffer})
+    requests.get('http://127.0.0.1:8080/hello/htmlsniff'), hooks={'response': requests_sniffer})
     time.sleep(10)
-    requests.get('http://127.0.0.1:8081/bye'), hooks={'response': requests_sniffer})
+    requests.get('http://127.0.0.1:8080/bye'), hooks={'response': requests_sniffer})
     htmlsniff.plantuml_seqdiag('client.html', sniffers=[requests_sniffer])
 
 <client.html>
