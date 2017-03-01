@@ -22,7 +22,7 @@ Distributed HTML sniffing for Python
 
 
 * Free software: MIT license
-* Documentation: None yet. Should be on https://htmlsniff.readthedocs.io.
+* Documentation: https://htmlsniff.readthedocs.io
 
 
 Features
@@ -100,12 +100,12 @@ Or we can get a similar diagram modifying the server code. E.g:
     def index(name):
         return bottle.template('Hi {{name}}!', name=name)
 
-    bottle.run(host='localhost', port=8080)
-
     # Consumed to generate a new diagram
     @route('/seqdiagram')
     def seqdiagram:
         htmlsniff.plantuml_seqdiag('server.html', sniffers=[bottle_sniffer])
+
+    bottle.run(host='localhost', port=8080)
 
 ..  autonumber
     "127.0.0.1:41232"-> "webserver": /hello/htmlsniff
