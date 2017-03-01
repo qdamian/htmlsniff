@@ -1,4 +1,4 @@
-Welcome to htmlsniff's documentation!
+Welcome to htmlviz's documentation!
 ======================================
 
 Contents:

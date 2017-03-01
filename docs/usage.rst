@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use htmlsniff in a project::
+To use htmlviz in a project::
 
-    import htmlsniff
+    import htmlviz

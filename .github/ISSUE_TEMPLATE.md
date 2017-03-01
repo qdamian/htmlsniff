@@ -1,4 +1,4 @@
-* htmlsniff version:
+* htmlviz version:
 * Python version:
 * Operating System:
 

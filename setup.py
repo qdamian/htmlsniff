@@ -18,23 +18,23 @@ test_requirements = [
 ]
 
 setup(
-    name='htmlsniff',
+    name='htmlviz',
     version='0.1.0',
     description="Distributed HTML sniffing for Python",
     long_description=readme + '\n\n' + history,
     author="Damian Quiroga",
     author_email='qdamian@gmail.com',
-    url='https://github.com/qdamian/htmlsniff',
+    url='https://github.com/qdamian/htmlviz',
     packages=[
-        'htmlsniff',
+        'htmlviz',
     ],
-    package_dir={'htmlsniff':
-                 'htmlsniff'},
+    package_dir={'htmlviz':
+                 'htmlviz'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='htmlsniff',
+    keywords='htmlviz',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

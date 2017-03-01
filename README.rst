@@ -1,20 +1,20 @@
 ===============================
-htmlsniff
+htmlviz
 ===============================
 
 
-.. image:: https://img.shields.io/pypi/v/htmlsniff.svg
-        :target: https://pypi.python.org/pypi/htmlsniff
+.. image:: https://img.shields.io/pypi/v/htmlviz.svg
+        :target: https://pypi.python.org/pypi/htmlviz
 
-.. image:: https://img.shields.io/travis/qdamian/htmlsniff.svg
-        :target: https://travis-ci.org/qdamian/htmlsniff
+.. image:: https://img.shields.io/travis/qdamian/htmlviz.svg
+        :target: https://travis-ci.org/qdamian/htmlviz
 
-.. image:: https://readthedocs.org/projects/htmlsniff/badge/?version=latest
-        :target: https://htmlsniff.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/htmlviz/badge/?version=latest
+        :target: https://htmlviz.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/qdamian/htmlsniff/shield.svg
-     :target: https://pyup.io/repos/github/qdamian/htmlsniff/
+.. image:: https://pyup.io/repos/github/qdamian/htmlviz/shield.svg
+     :target: https://pyup.io/repos/github/qdamian/htmlviz/
      :alt: Updates
 
 
@@ -22,7 +22,7 @@ Distributed HTML sniffing for Python
 
 
 * Free software: MIT license
-* Documentation: https://htmlsniff.readthedocs.io
+* Documentation: https://htmlviz.readthedocs.io
 
 
 Features
@@ -52,48 +52,48 @@ Or we have a client consuming such web service, using Requests_:
     import requests
     import time
 
-    requests.get('http://127.0.0.1:8080/hello/htmlsniff'))
+    requests.get('http://127.0.0.1:8080/hello/htmlviz'))
     time.sleep(10)
     requests.get('http://127.0.0.1:8080/bye'))
 
-We can use htmlsniff to generate a PlantUML_ sequence diagram showing the HTTP
+We can use htmlviz to generate a PlantUML_ sequence diagram showing the HTTP
 transactions between the client and the server.
 
 We can achieve this client side, e.g.:
 
 .. code-block:: python
 
-    import htmlsniff
+    import htmlviz
     import requests
     import time
 
-    requests_sniffer = htmlsniff.RequestsSniffer(client_name="browser")
-    requests.get('http://127.0.0.1:8080/hello/htmlsniff'), hooks={'response': requests_sniffer})
+    requests_sniffer = htmlviz.RequestsSniffer(client_name="browser")
+    requests.get('http://127.0.0.1:8080/hello/htmlviz'), hooks={'response': requests_sniffer})
     time.sleep(10)
     requests.get('http://127.0.0.1:8080/bye'), hooks={'response': requests_sniffer})
-    htmlsniff.plantuml_seqdiag('client.html', sniffers=[requests_sniffer])
+    htmlviz.plantuml_seqdiag('client.html', sniffers=[requests_sniffer])
 
 <client.html>
 
 ..  autonumber
-    browser-> "127.0.0.1:8080": /hello/htmlsniff
+    browser-> "127.0.0.1:8080": /hello/htmlviz
     "127.0.0.1:8080" --> browser: 200 OK
-    note right of browser: Hi htmlsniff!
+    note right of browser: Hi htmlviz!
     ...10 sec....
     browser-> "127.0.0.1:8080": /bye
     "127.0.0.1:8080" -[#red]-> browser: 404 Not Found
     note right of browser: <!DOCTYPE HTML\n PUBLIC "-//IETF...
 
-.. image:: http://www.plantuml.com/plantuml/svg/VOvF2u8m6CRl-nIlTdPE4HA93fcYPDd13b4TCcSASuCvaRvz2u8YAjxB0-_pvtSUbE13LrA9IYd6dafh3gRZJZ7HvmG-yOaPWDrGneJTg8xLJ8peqm6MZZqB0d09WNo5k50KP7jj58ZwzKrQUFJqlArh0s6C7G8zlMY1_pEKD_fb-32Hj3gzptl4WurG48k1LxyePiOo3ulzDeAaM6T73jlT8aj3C2tRJgCYrZHt
+.. image:: http://www.plantuml.com/plantuml/svg/XOx12e9054NtVSNJriwC8YGIBJ95oTA5BQ9QP4ufw0oCOr5Vto124LJtRUxYlCivTfAphicf685ABlYjfSAOWMvQ4qJKcQv37AAxW4jQrnoNigclrQF7Fo4mrEUmuO9522JB7cHSKX3LfPJ0poyYh62OqteC8MGIQEb95VHVAB_JBngxiQ35uLt69ZQikOI0TwpuvJJL5ecNRLCVmcmLxncactaSUQ0R64T-5YYp9m00
 
 Or we can get a similar diagram modifying the server code. E.g:
 
 .. code-block:: python
 
-    import htmlsniff
+    import htmlviz
     import bottle
 
-    bottle_sniffer = htmlsniff.BottleSniffer(server_name="webserver")
+    bottle_sniffer = htmlviz.BottleSniffer(server_name="webserver")
     bottle.install(bottle_sniffer)
 
     @bottle.route('/hello/<name>')
@@ -103,14 +103,14 @@ Or we can get a similar diagram modifying the server code. E.g:
     # Consumed to generate a new diagram
     @route('/seqdiagram')
     def seqdiagram:
-        htmlsniff.plantuml_seqdiag('server.html', sniffers=[bottle_sniffer])
+        htmlviz.plantuml_seqdiag('server.html', sniffers=[bottle_sniffer])
 
     bottle.run(host='localhost', port=8080)
 
 ..  autonumber
-    "127.0.0.1:41232"-> "webserver": /hello/htmlsniff
+    "127.0.0.1:41232"-> "webserver": /hello/htmlviz
     "webserver" --> "127.0.0.1:41232": 200 OK
-    note right of "127.0.0.1:41232": Hi htmlsniff!
+    note right of "127.0.0.1:41232": Hi htmlviz!
     ...10 sec....
     "127.0.0.1:41232"-> "webserver": /bye
     "webserver" -[#red]-> "127.0.0.1:41232": 404 Not Found
@@ -118,7 +118,7 @@ Or we can get a similar diagram modifying the server code. E.g:
 
 <server.html>
 
-.. image:: http://www.plantuml.com/plantuml/svg/ZSv12u9040NWkxzYtCwkgmc1H8TCKRBiO8Ue3fbZ2heBwrhqxxDBL0Z5N1xCu_6TEYLursGeDMBP4yhwirp7iiSsCMP0RfYrAAyeYGjcYNKjp58rTSkhej3Ulc0yszyBBjYCGRBKk508ihgK2aGnr0ihUEtg6gNKOj3YkG_q3rXsnq_CVYGnFmwJ7ER0MYW8HCVptxAflaYyTBVn8KnNyO73PZkF8m-8OPgHdmQzy040
+.. image:: http://www.plantuml.com/plantuml/svg/ZOvD2u9048Rl_OfnExkk9WGI7J95oRA37Q8wP4ufg0lhQjIlppuWA0_EN0RcUL-UOorvMHSnYW6qGtHZJ5cxkcNgniWWwXJ85UCAHOE2MA2bcETSIsMHDzdzdVd-GNtolnqM68n1k7ZH9PS88hka4lYvY_Ko-BGhhm2bL6TGuQazQ4_9-8R_QhkXmEJGBMWo4rPSWilhCkddEL7ceHrjrmvuqJBObx3Up0BV1g9gckz4Rclx0000
 
 Credits
 ---------

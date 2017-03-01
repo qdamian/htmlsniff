@@ -2,16 +2,16 @@
 # -*- coding: utf-8 -*-
 
 """
-test_htmlsniff
+test_htmlviz
 ----------------------------------
 
-Tests for `htmlsniff` module.
+Tests for `htmlviz` module.
 """
 
 import pytest
 
 
-from htmlsniff import htmlsniff
+from htmlviz import htmlviz
 
 
 @pytest.fixture
