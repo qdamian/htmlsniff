@@ -19,7 +19,7 @@ deploy:
       TWRLZUk2TkliazlCSitWZXFONFFUb21UM1Q5bW4zNmx2WmhDMzhZN3FnOSs5Uit2L0dpK0lSRGs9
   true:
     condition: $TOXENV == py27
-    repo: qdamian/htmlviz
+    repo: qdamian/htmlvis
     tags: true
 env:
 - TOXENV=py35

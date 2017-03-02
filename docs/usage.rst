@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use htmlviz in a project::
+To use htmlvis in a project::
 
-    import htmlviz
+    import htmlvis

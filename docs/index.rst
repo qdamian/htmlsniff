@@ -1,4 +1,4 @@
-Welcome to htmlviz's documentation!
+Welcome to htmlvis's documentation!
 ======================================
 
 Contents:

@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from htmlviz import plantuml
+from . import plantuml
 
 Request = namedtuple('Request', 'url, elapsed')
 Response = namedtuple('Response', 'status, elapsed')

@@ -1,31 +1,31 @@
 import pytest
 
-import htmlviz
-from htmlviz import plantuml
+import htmlvis
+from htmlvis import plantuml
 from mock import Mock
 
 
 class TestSeqDiag(object):
     def test_converts_sniffers_transactions_to_ordered_messages(self, mocker):
-        mocker.patch('htmlviz.plantuml.seqdiag')
+        mocker.patch('htmlvis.plantuml.seqdiag')
         sniffer = Mock()
         sniffer.transactions = [
-            htmlviz.Transaction(
+            htmlvis.Transaction(
                 client='The Client',
                 server='The Server',
-                request=htmlviz.Request(
+                request=htmlvis.Request(
                     url='/kindness', elapsed=0.01),
-                response=htmlviz.Response(
+                response=htmlvis.Response(
                     status='200 OK', elapsed=0.05)),
-            htmlviz.Transaction(
+            htmlvis.Transaction(
                 client='The Client',
                 server='The Server',
-                request=htmlviz.Request(
+                request=htmlvis.Request(
                     url='/rudeness', elapsed=0.02),
-                response=htmlviz.Response(
+                response=htmlvis.Response(
                     status='404 Not Found', elapsed=0.03)),
         ]
-        htmlviz.seqdiag('/fake/path', [sniffer])
+        htmlvis.seqdiag('/fake/path', [sniffer])
         messages = plantuml.seqdiag.call_args[1]['messages']
         assert messages[0].when == 0.01
         assert messages[1].when == 0.02

@@ -1,4 +1,4 @@
-* htmlviz version:
+* htmlvis version:
 * Python version:
 * Operating System:
 

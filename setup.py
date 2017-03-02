@@ -18,23 +18,23 @@ test_requirements = [
 ]
 
 setup(
-    name='htmlviz',
+    name='htmlvis',
     version='0.1.0',
     description="HTML visualization for Python",
     long_description=readme + '\n\n' + history,
     author="Damian Quiroga",
     author_email='qdamian@gmail.com',
-    url='https://github.com/qdamian/htmlviz',
+    url='https://github.com/qdamian/htmlvis',
     packages=[
-        'htmlviz',
+        'htmlvis',
     ],
-    package_dir={'htmlviz':
-                 'htmlviz'},
+    package_dir={'htmlvis':
+                 'htmlvis'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='htmlviz',
+    keywords='htmlvis',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
