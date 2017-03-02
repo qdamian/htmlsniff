@@ -17,8 +17,9 @@ htmlviz
      :target: https://pyup.io/repos/github/qdamian/htmlviz/
      :alt: Updates
 
+.. image:: logo.png
 
-Distributed HTML sniffing for Python
+HTML visualization for Python
 
 
 * Free software: MIT license

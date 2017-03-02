@@ -20,7 +20,7 @@ test_requirements = [
 setup(
     name='htmlviz',
     version='0.1.0',
-    description="Distributed HTML sniffing for Python",
+    description="HTML visualization for Python",
     long_description=readme + '\n\n' + history,
     author="Damian Quiroga",
     author_email='qdamian@gmail.com',
