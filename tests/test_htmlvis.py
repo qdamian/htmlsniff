@@ -11,7 +11,7 @@ def successful_transaction():
         client='The Client',
         server='The Server',
         request=htmlvis.Request(
-            url='/kindness', elapsed=0.1),
+            method='PUT', url='/kindness', elapsed=0.1),
         response=htmlvis.Response(
             status='200 OK', elapsed=0.2))
 
@@ -22,7 +22,7 @@ def error_transaction():
         client='The Client',
         server='The Server',
         request=htmlvis.Request(
-            url='/rudeness', elapsed=1.1),
+            method='GET', url='/rudeness', elapsed=1.1),
         response=htmlvis.Response(
             status='404 Not Found', elapsed=1.2))
 
@@ -89,7 +89,8 @@ class TestSeqDiag(object):
         assert response_msg.dst == successful_transaction.client
         assert response_msg.data['status'] == successful_transaction.response.status
 
-    def test_gets_transactions_from_all_sniffers(self, mocker, successful_transaction, error_transaction):
+    def test_gets_transactions_from_all_sniffers(self, mocker, successful_transaction,
+                                                 error_transaction):
         mocker.patch('htmlvis.plantuml.seqdiag')
         sniffer_a = Mock()
         sniffer_a.transactions = [successful_transaction]
@@ -98,3 +99,14 @@ class TestSeqDiag(object):
         htmlvis.seqdiag('/fake/path', [sniffer_a, sniffer_b])
         messages = plantuml.seqdiag.call_args[1]['messages']
         assert len(messages) == 4
+
+    @pytest.mark.parametrize('transaction, expected_method',
+                             [(successful_transaction, 'PUT'), (error_transaction, 'GET')])
+    def test_includes_the_request_http_method_as_message_data(self, mocker, transaction,
+                                                              expected_method):
+        mocker.patch('htmlvis.plantuml.seqdiag')
+        sniffer = Mock()
+        sniffer.transactions = [transaction()]
+        htmlvis.seqdiag('/fake/path', [sniffer])
+        request_msg = plantuml.seqdiag.call_args[1]['messages'][0]
+        assert request_msg.data['method'] == expected_method
