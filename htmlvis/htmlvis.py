@@ -1,10 +1,28 @@
 from collections import namedtuple
 
+from attr import attrib, attrs
+
 from . import plantuml
 
-Request = namedtuple('Request', 'url, elapsed')
-Response = namedtuple('Response', 'status, elapsed')
-Transaction = namedtuple('Transaction', 'client, server, request, response')
+
+@attrs
+class Request(object):
+    url = attrib()
+    elapsed = attrib()
+
+
+@attrs
+class Response(object):
+    status = attrib()
+    elapsed = attrib()
+
+
+@attrs
+class Transaction(object):
+    client = attrib()
+    server = attrib()
+    request = attrib()
+    response = attrib()
 
 
 def seqdiag(output_file_path, sniffers):
