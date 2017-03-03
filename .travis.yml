@@ -22,10 +22,12 @@ deploy:
     repo: qdamian/htmlvis
     tags: true
 env:
-- TOXENV=py35
-- TOXENV=py34
-- TOXENV=py33
 - TOXENV=py27
+- TOXENV=py33
+- TOXENV=py34
+- TOXENV=py35
+- TOXENV=flake8
+- TOXENV=coveralls
 install: pip install -U tox coveralls
 language: python
 python: 3.5
