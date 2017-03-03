@@ -5,9 +5,15 @@ htmlvis
 
 .. image:: https://img.shields.io/pypi/v/htmlvis.svg
         :target: https://pypi.python.org/pypi/htmlvis
+        :alt: Pypi Status
 
 .. image:: https://img.shields.io/travis/qdamian/htmlvis.svg
         :target: https://travis-ci.org/qdamian/htmlvis
+        :alt: Build Status
+
+.. image:: https://coveralls.io/repos/github/qdamian/htmlvis/badge.svg
+        :target: https://coveralls.io/github/qdamian/htmlvis
+        :alt: Coverage Status
 
 .. image:: https://readthedocs.org/projects/htmlvis/badge/?version=latest
         :target: https://htmlvis.readthedocs.io/en/latest/?badge=latest
