@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 from attr import attrib, attrs
 
 from . import plantuml
