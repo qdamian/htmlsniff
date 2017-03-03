@@ -30,7 +30,4 @@ install: pip install -U tox coveralls
 language: python
 python: 3.5
 script:
-  - coverage run --source=htmlvis test
   - tox -e ${TOXENV}
-after_success:
-  - coveralls
