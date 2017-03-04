@@ -42,62 +42,20 @@ Features
 Usage
 -----
 
-Let's say we are running a simple web server using Bottle_:
+Capturing packets with Requests
++++++++++++++++++++++++++++++++
 
 .. code-block:: python
 
-    import bottle
-
-    @bottle.route('/hello/<name>')
-    def index(name):
-        return bottle.template('Hi {{name}}!', name=name)
-
-    bottle.run(host='localhost', port=8080)
-
-Or we have a client consuming such web service, using Requests_:
-
-.. code-block:: python
-
-    import requests
-    import time
-
-    requests.get('http://127.0.0.1:8080/hello/htmlvis'))
-    time.sleep(10)
-    requests.get('http://127.0.0.1:8080/bye'))
-
-We can use htmlvis to generate a PlantUML_ sequence diagram showing the HTTP
-transactions between the client and the server.
-
-We can achieve this by instrumenting our code client side, e.g.:
-
-.. code-block:: python
-
-    import functools
     import htmlvis
     import requests
-    import time
 
     requests_sniffer = htmlvis.RequestsSniffer(client_name="browser")
     get = functools.partial(requests.get, hooks={'response': requests_sniffer})
-    get('http://127.0.0.1:8080/hello/htmlvis')
-    time.sleep(10)
-    get('http://127.0.0.1:8080/bye')
-    htmlvis.seqdiag('client.html', sniffers=[requests_sniffer])
+    get('https://foo.com/bar')
 
-<client.html>
-
-..  autonumber
-    browser-> "127.0.0.1:8080": /hello/htmlvis
-    "127.0.0.1:8080" --> browser: 200 OK
-    note right of browser: Hi htmlvis!
-    ...10 sec....
-    browser-> "127.0.0.1:8080": /bye
-    "127.0.0.1:8080" -[#red]-> browser: 404 Not Found
-    note right of browser: <!DOCTYPE HTML\n PUBLIC "-//IETF...
-
-.. image:: http://www.plantuml.com/plantuml/svg/XOx12e9054NtVSNJriwC8YGIBJ95oTA5Bg9QP4ufw0oCOz7VDuXG1DLzcxiuxt9ElUIiRmig9g1I27xlg30Me9lM315rfkiGX-Wku8es3SULR9jRtGtu9mI6-XmtNB08WMGzW8nB2gA-LXBuvKM4DOnpse0XX4m27JshWluB5G_wHMC_5RGylilOn8Ojbn3mdfM_dERQAl6oNUf3c6tY0uCqNyQH1xg1SUHdWJ9x0W00
-
-Or we can get a similar diagram modifying the server code. E.g:
+Capturing packets with Bottle
++++++++++++++++++++++++++++++
 
 .. code-block:: python
 
@@ -107,29 +65,17 @@ Or we can get a similar diagram modifying the server code. E.g:
     bottle_sniffer = htmlvis.BottleSniffer(server_name="webserver")
     bottle.install(bottle_sniffer)
 
-    @bottle.route('/hello/<name>')
-    def index(name):
-        return bottle.template('Hi {{name}}!', name=name)
+Generating a sequence diagram
++++++++++++++++++++++++++++++
 
-    # Consumed to generate a new diagram
-    @route('/seqdiagram')
-    def seqdiagram:
-        htmlvis.seqdiag('server.html', sniffers=[bottle_sniffer])
+.. code-block:: python
 
-    bottle.run(host='localhost', port=8080)
+        htmlvis.seqdiag('sample.html', sniffers)
 
-..  autonumber
-    "127.0.0.1:41232"-> "webserver": /hello/htmlvis
-    "webserver" --> "127.0.0.1:41232": 200 OK
-    note right of "127.0.0.1:41232": Hi htmlvis!
-    ...10 sec....
-    "127.0.0.1:41232"-> "webserver": /bye
-    "webserver" -[#red]-> "127.0.0.1:41232": 404 Not Found
-    note right of "127.0.0.1:41232": <!DOCTYPE HTML\n PUBLIC "-//IETF...
+Sample use case
+---------------
 
-<server.html>
-
-.. image:: http://www.plantuml.com/plantuml/svg/ZOx12e9048RlFSMudLrN4mA93fcYPEd13b4TCgSKr8LrDNhxp8AWF3Hp6PZl__bEZUHLKoOeHj0DqOqfPTtgbgaR4uEeSo0tJ6eKBGfYWPPXKN0jasNHvlKhy_c3-kI_Eomm68DmrTCLbmWYlsOI-6M8zN9ujojzW5AgCwZnt1tqJydaZhzg-x70z3WiQ38JDbo2ovig_SzpfYn3Ezv53dZnEZXK46qNWMy3KJNDTsAtitq0
+We're building an activity_recommendations_service.py_.
 
 Credits
 ---------
@@ -140,4 +86,5 @@ The initial version of this package was created with Cookiecutter_ and the `audr
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _PlantUML: http://plantuml.com/
 .. _Requests: http://docs.python-requests.org
+.. _activity_recommendations_service.py: examples/recommendations_service/activity_recommendations_service.py
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
