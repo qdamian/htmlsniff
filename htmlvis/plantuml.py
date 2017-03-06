@@ -6,5 +6,6 @@ def seqdiag(messages):
     for msg in messages:
         source = msg.src
         sanitized_source = source.replace('"', "'")
-        diag += '"{source}" -> "Server"{text}\n'.format(source=sanitized_source, text=msg.text)
+        diag += '"{source}" -> "Server"{text}\n'.format(
+            source=sanitized_source, text=msg.text)
     return diag
