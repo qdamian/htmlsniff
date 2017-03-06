@@ -51,8 +51,7 @@ Capturing packets with Requests
     import requests
 
     requests_sniffer = htmlvis.RequestsSniffer(client_name="browser")
-    get = functools.partial(requests.get, hooks={'response': requests_sniffer})
-    get('https://foo.com/bar')
+    requests.get('https://foo.com/bar', hooks={'response': requests_sniffer})
 
 Capturing packets with Bottle
 +++++++++++++++++++++++++++++

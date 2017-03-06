@@ -1,6 +1,6 @@
 from attr import attrib, attrs
 
-from . import plantuml
+from . import seqdiag
 
 
 @attrs
@@ -27,25 +27,26 @@ class Transaction(object):
     response = attrib()
 
 
-def seqdiag(output_file_path, sniffers):
+def save_seq_diag(output_file_path, sniffers):
     """Generate a sequence diagram based on the transactions captured
     by the given HTTP sniffers
     """
     messages = []
     for sniffer in sniffers:
         for trans in sniffer.transactions:
-            messages += _split_transaction_into_messages(trans)
-    messages.sort(key=lambda msg: msg)
-    plantuml.seqdiag(messages=messages)
+            messages += _convert_html_transactions_to_seq_diag_msgs(trans)
+    messages.sort(key=lambda msg: msg.when)
+    seqdiag.draw(messages=messages)
 
 
-def _split_transaction_into_messages(transaction):
+def _convert_html_transactions_to_seq_diag_msgs(transaction):
     msgs = []
     msgs += [
-        plantuml.Message(
-            category='request',
+        seqdiag.Message(
+            category=seqdiag.Category.request,
             src=transaction.client,
             dst=transaction.server,
+            text='',
             when=transaction.request.elapsed,
             data={
                 'method': transaction.request.method,
@@ -53,10 +54,11 @@ def _split_transaction_into_messages(transaction):
             })
     ]
     msgs += [
-        plantuml.Message(
-            category='response',
+        seqdiag.Message(
+            category=seqdiag.Category.response,
             src=transaction.server,
             dst=transaction.client,
+            text='',
             when=transaction.response.elapsed,
             data={'status': transaction.response.status})
     ]
