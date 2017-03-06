@@ -19,6 +19,10 @@ htmlvis
         :target: https://htmlvis.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. image:: https://landscape.io/github/qdamian/htmlvis/master/landscape.svg?style=flat
+        :target: https://landscape.io/github/qdamian/htmlvis/master
+        :alt: Code Health
+
 .. image:: https://pyup.io/repos/github/qdamian/htmlvis/shield.svg
      :target: https://pyup.io/repos/github/qdamian/htmlvis/
      :alt: Updates
