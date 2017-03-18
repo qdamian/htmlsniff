@@ -115,7 +115,8 @@ class TestSniffingRequestsPlugin:
             json={'Better safe': 'Than sorry'},
             hooks={'response': sniffing_hook})
         transaction = sniffing_hook.transactions[0]
-        assert transaction.request.body == '{"Better safe": "Than sorry"}'
+        # FIXME: should be str instead of bytes?
+        assert transaction.request.body == b'{"Better safe": "Than sorry"}'
 
     @responses.activate
     def test_records_the_request_body_if_content_is_plain_text(
@@ -126,6 +127,7 @@ class TestSniffingRequestsPlugin:
             data='Better safe than sorry',
             hooks={'response': sniffing_hook})
         transaction = sniffing_hook.transactions[0]
+        # FIXME: should be bytes instead of str?
         assert transaction.request.body == 'Better safe than sorry'
 
     @responses.activate
