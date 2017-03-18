@@ -1,13 +1,14 @@
-import json
 import re
 import time
-from collections import namedtuple
-from urlparse import urlsplit
-
-import requests
 
 from .html_sniffer import HTTPSniffer
 from .htmlvis import Request, Response, Transaction
+
+try:
+    from url.parse import urlsplit
+except ImportError:
+    from urlparse import urlsplit
+
 
 
 class SniffingRequestsPlugin(HTTPSniffer):

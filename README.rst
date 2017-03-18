@@ -27,6 +27,10 @@ htmlvis
      :target: https://pyup.io/repos/github/qdamian/htmlvis/
      :alt: Updates
 
+ .. image:: https://www.quantifiedcode.com/api/v1/project/0bb0e06a69bf441191265e664e049fb0/badge.svg
+     :target: https://www.quantifiedcode.com/app/project/0bb0e06a69bf441191265e664e049fb0
+     :alt: Code issues
+
 HTML visualization for Python
 
 .. image:: logo.png
