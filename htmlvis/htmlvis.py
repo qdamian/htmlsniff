@@ -6,25 +6,29 @@ from . import seqdiag
 @attrs
 class Request(object):
     """Simplified representation of an HTTP request."""
-    method = attrib()
-    url = attrib()
+    body = attrib()
     elapsed = attrib()
+    headers = attrib()
+    method = attrib()
+    url_path = attrib()
 
 
 @attrs
 class Response(object):
     """Simplified representation of an HTTP response."""
-    status = attrib()
+    body = attrib()
     elapsed = attrib()
+    headers = attrib()
+    status = attrib()
 
 
 @attrs
 class Transaction(object):
     """Simplified representation of a request-response pair."""
-    client = attrib()
-    server = attrib()
+    client_name = attrib()
     request = attrib()
     response = attrib()
+    server_name = attrib()
 
 
 def save_seq_diag(output_file_path, sniffers):
@@ -44,20 +48,20 @@ def _convert_html_transactions_to_seq_diag_msgs(transaction):
     msgs += [
         seqdiag.Message(
             category=seqdiag.Category.request,
-            src=transaction.client,
-            dst=transaction.server,
+            src=transaction.client_name,
+            dst=transaction.server_name,
             text='',
             when=transaction.request.elapsed,
             data={
                 'method': transaction.request.method,
-                'url': transaction.request.url,
+                'url': transaction.request.url_path,
             })
     ]
     msgs += [
         seqdiag.Message(
             category=seqdiag.Category.response,
-            src=transaction.server,
-            dst=transaction.client,
+            src=transaction.server_name,
+            dst=transaction.client_name,
             text='',
             when=transaction.response.elapsed,
             data={'status': transaction.response.status})

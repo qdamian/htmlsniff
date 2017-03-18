@@ -9,6 +9,7 @@ pytest-cov==2.4.0
 pytest-mock==1.5.0
 pytest==3.0.6
 PyYAML==3.12
+responses==0.5.1
 Sphinx==1.5.3
 tox==2.6.0
 watchdog==0.8.3
