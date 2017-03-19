@@ -54,7 +54,4 @@ def _encode_3_bytes(byte1, byte2, byte3):
 def _encode_6_bits(six_bits):
     "Encode a group of 6 bits into a charcter valid in a URL"
     assert isinstance(six_bits, int)
-    try:
-        return chr(SIXBITOFFSET[six_bits] + six_bits)
-    except KeyError:
-        return '?'
+    return chr(SIXBITOFFSET[six_bits] + six_bits)
