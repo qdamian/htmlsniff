@@ -11,6 +11,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'attrs==16.3.0',
+    'six==1.10.0',
 ]
 
 test_requirements = [
