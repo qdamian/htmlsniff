@@ -1,8 +1,7 @@
 import re
 import time
 
-from .html_sniffer import HTTPSniffer
-from .htmlvis import Request, Response, Transaction
+from .htmlvis import HTTPSniffer, Request, Response, Transaction
 
 try:
     from urllib.parse import urlsplit
@@ -10,13 +9,13 @@ except ImportError:
     from urlparse import urlsplit
 
 
-class SniffingRequestsPlugin(HTTPSniffer):
+class RequestsSniffer(HTTPSniffer):
     """An HTTP sniffer than can be hooked to the requests library
     See http://docs.python-requests.org/en/master/user/advanced/
     """
 
     def __init__(self, client_name, server_name):
-        super(SniffingRequestsPlugin, self).__init__()
+        super(RequestsSniffer, self).__init__()
         self._transactions = []
         self._client_name = client_name
         self._server_name = server_name

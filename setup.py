@@ -28,8 +28,7 @@ setup(
     packages=[
         'htmlvis',
     ],
-    package_dir={'htmlvis':
-                 'htmlvis'},
+    package_dir={'htmlvis': 'htmlvis'},
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
@@ -49,5 +48,4 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     test_suite='tests',
-    tests_require=test_requirements
-)
+    tests_require=test_requirements)

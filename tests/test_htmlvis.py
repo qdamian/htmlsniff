@@ -38,7 +38,7 @@ def error_transaction():
             body='', elapsed=1.2, headers={}, status='404 Not Found'))
 
 
-class TestSeqDiag(object):
+class TestSaveSeqDiag(object):
     def test_creates_a_request_message_from_the_transaction_request(
             self, mocker, successful_transaction):
         sniffer = Mock()

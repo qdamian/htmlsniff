@@ -1,6 +1,5 @@
-from htmlvis import seqdiag
-from htmlvis import plantuml
 import pytest
+from htmlvis import plantuml, seqdiag, plantuml_text_encoding
 
 
 @pytest.fixture
@@ -25,7 +24,12 @@ def sample_response():
         data='')
 
 
-class TestSeqDiag(object):
+@pytest.fixture(autouse=True)
+def mock_plantuml(mocker):
+    mocker.patch('htmlvis.plantuml_text_encoding.encode')
+
+
+class TestTextualRepresentation(object):
     def test_source_is_mandatory(self, sample_request):
         with pytest.raises(ValueError):
             malformed_request = seqdiag.Message(
@@ -35,26 +39,32 @@ class TestSeqDiag(object):
                 text='hi there',
                 when=0.0,
                 data='')
-            diag = plantuml.seqdiag([malformed_request])
+            plantuml.image([malformed_request])
 
     def test_sources_are_quoted(self, sample_request):
-        diag = plantuml.seqdiag([sample_request])
-        assert '"Client"' in diag
+        plantuml.image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert '"Client"' in text_repr
 
     def test_destinations_are_quoted(self, sample_request):
-        diag = plantuml.seqdiag([sample_request])
-        assert '"Server"' in diag
+        plantuml.image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert '"Server"' in text_repr
 
-    def test_double_quotes_in_source_name_are_converted_to_single_quotes(self, sample_request):
+    def test_double_quotes_in_source_name_are_converted_to_single_quotes(
+            self, sample_request):
         sample_request.src = 'This " contains quotes"'
-        diag = plantuml.seqdiag([sample_request])
-        assert r"This ' contains quotes'" in diag
+        plantuml.image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert r"This ' contains quotes'" in text_repr
 
     def test_a_request_is_drawn_with_solid_line(self, sample_request):
-        diag = plantuml.seqdiag([sample_request])
-        assert '"Client" -> "Server"' in diag
+        plantuml.image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert '"Client" -> "Server"' in text_repr
 
     def test_handles_two_messages(self, sample_request, sample_response):
-        diag = plantuml.seqdiag([sample_request, sample_response])
-        assert 'hi there' in diag
-        assert 'hello' in diag
+        plantuml.image([sample_request, sample_response])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert 'hi there' in text_repr
+        assert 'hello' in text_repr

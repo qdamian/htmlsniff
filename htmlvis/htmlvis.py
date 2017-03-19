@@ -3,6 +3,22 @@ from attr import attrib, attrs
 from . import seqdiag
 
 
+class HTTPSniffer(object):
+    """A class that captures network traffic at either client or server side and
+    records information about each HTTP transaction, such as URLs, headers,
+    bodies, etc
+    """
+
+    @property
+    def transactions(self):
+        """A list of Transaction objects"""
+        raise NotImplementedError()
+
+    def restart(self):
+        """Clear the captured transactions and reset the capture clock"""
+        raise NotImplementedError()
+
+
 @attrs
 class Request(object):
     """Simplified representation of an HTTP request."""
@@ -38,12 +54,12 @@ def save_seq_diag(output_file_path, sniffers):
     messages = []
     for sniffer in sniffers:
         for trans in sniffer.transactions:
-            messages += _convert_html_transactions_to_seq_diag_msgs(trans)
+            messages += _convert_to_seq_diag_messages(trans)
     messages.sort(key=lambda msg: msg.when)
     seqdiag.draw(messages=messages)
 
 
-def _convert_html_transactions_to_seq_diag_msgs(transaction):
+def _convert_to_seq_diag_messages(transaction):
     msgs = []
     msgs += [
         seqdiag.Message(

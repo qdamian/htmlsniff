@@ -2,10 +2,11 @@
 A tiny service that helps you plan your day based on the weather forecast
 """
 import json
-import requests
-import bottle
 
-TIP_BY_WEATHER = {
+import bottle
+import requests
+
+RECOMMENDATION = {
     'sunny': 'go hiking',
     'rainy': 'better stay home',
 }
@@ -17,7 +18,7 @@ def recommendation():
     response.raise_for_status()
     json_data = json.loads(response.text)
     forecast = json_data['weather']
-    return TIP_BY_WEATHER[forecast]
+    return RECOMMENDATION[forecast]
 
 
 bottle.run(host='localhost', port=8080)

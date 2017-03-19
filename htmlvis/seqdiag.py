@@ -19,4 +19,4 @@ class Message(object):
 
 def draw(messages):
     print('draw called')
-    plantuml.seqdiag(messages)
+    plantuml.image(messages)
