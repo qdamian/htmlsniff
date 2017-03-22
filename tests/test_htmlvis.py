@@ -1,11 +1,19 @@
 import htmlvis
 import pytest
-from mock import Mock
+from mock import Mock, mock_open
 
 
 @pytest.fixture(autouse=True)
 def patch_seqdiag_draw(mocker):
     mocker.patch('htmlvis.seqdiag.draw')
+
+
+@pytest.fixture(autouse=True)
+def patch_open(mocker):
+    try:
+        mocker.patch('builtins.open', mock_open())
+    except ImportError:
+        mocker.patch('__builtin__.open', mock_open())
 
 
 @pytest.fixture
@@ -157,3 +165,18 @@ class TestSaveSeqDiag(object):
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
         assert request_msg.data['method'] == expected_method
+
+    def test_opens_the_output_file_path_for_writing(self, mocker,
+                                                    successful_transaction):
+        sniffer = Mock()
+        sniffer.transactions = [successful_transaction]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        open.assert_called_once_with('/fake/path', 'w')
+
+    def test_writes_the_html_sequence_diagram_to_the_output_file(
+            self, mocker, successful_transaction):
+        sniffer = Mock()
+        sniffer.transactions = [successful_transaction]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        open.return_value.write.assert_called_once_with(
+            htmlvis.seqdiag.draw.return_value)

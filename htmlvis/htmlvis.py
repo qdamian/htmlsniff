@@ -56,7 +56,11 @@ def save_seq_diag(output_file_path, sniffers):
         for trans in sniffer.transactions:
             messages += _convert_to_seq_diag_messages(trans)
     messages.sort(key=lambda msg: msg.when)
-    seqdiag.draw(messages=messages)
+
+    with open(output_file_path, 'w') as output_file:
+        html_seqdiag = seqdiag.draw(messages=messages)
+        print('html diagram: %s' % html_seqdiag)
+        output_file.write(html_seqdiag)
 
 
 def _convert_to_seq_diag_messages(transaction):

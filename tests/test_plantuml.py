@@ -1,5 +1,7 @@
+import re
+
 import pytest
-from htmlvis import plantuml, seqdiag, plantuml_text_encoding
+from htmlvis import plantuml, plantuml_text_encoding, seqdiag
 
 
 @pytest.fixture
@@ -39,32 +41,41 @@ class TestTextualRepresentation(object):
                 text='hi there',
                 when=0.0,
                 data='')
-            plantuml.image([malformed_request])
+            plantuml.html_image([malformed_request])
 
     def test_sources_are_quoted(self, sample_request):
-        plantuml.image([sample_request])
+        plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert '"Client"' in text_repr
 
     def test_destinations_are_quoted(self, sample_request):
-        plantuml.image([sample_request])
+        plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert '"Server"' in text_repr
 
     def test_double_quotes_in_source_name_are_converted_to_single_quotes(
             self, sample_request):
         sample_request.src = 'This " contains quotes"'
-        plantuml.image([sample_request])
+        plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert r"This ' contains quotes'" in text_repr
 
     def test_a_request_is_drawn_with_solid_line(self, sample_request):
-        plantuml.image([sample_request])
+        plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert '"Client" -> "Server"' in text_repr
 
     def test_handles_two_messages(self, sample_request, sample_response):
-        plantuml.image([sample_request, sample_response])
+        plantuml.html_image([sample_request, sample_response])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert 'hi there' in text_repr
         assert 'hello' in text_repr
+
+    def test_returns_an_img_element(self, sample_request):
+        img_element = plantuml.html_image([sample_request])
+        assert re.match('<img.*>', img_element)
+
+    def test_returns_an_img_element(self, sample_request):
+        plantuml_text_encoding.encode.return_value = 'lalala'
+        img_element = plantuml.html_image([sample_request])
+        assert img_element == '<img src="http://www.plantuml.com/plantuml/svg/lalala">'
