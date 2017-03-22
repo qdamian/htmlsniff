@@ -11,9 +11,8 @@ htmlvis
         :target: https://travis-ci.org/qdamian/htmlvis
         :alt: Build Status
 
-.. image:: https://coveralls.io/repos/github/qdamian/htmlvis/badge.svg
-        :target: https://coveralls.io/github/qdamian/htmlvis
-        :alt: Coverage Status
+.. image:: https://coveralls.io/repos/github/qdamian/htmlvis/badge.svg?branch=master
+        :target: https://coveralls.io/github/qdamian/htmlvis?branch=master
 
 .. image:: https://readthedocs.org/projects/htmlvis/badge/?version=latest
         :target: https://htmlvis.readthedocs.io/en/latest/?badge=latest
