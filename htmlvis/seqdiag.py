@@ -7,10 +7,16 @@ from . import plantuml
 Category = Enum('Category', 'request response')
 
 
+def assert_not_empty(message, attribute, value):
+    if not value:
+        raise ValueError(
+            '{attribute} cannot be empty'.format(attribute=attribute.name))
+
+
 @attrs
 class Message(object):
     category = attrib()
-    src = attrib()
+    src = attrib(validator=assert_not_empty)
     dst = attrib()
     text = attrib()
     when = attrib()

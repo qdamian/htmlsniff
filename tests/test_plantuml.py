@@ -8,8 +8,8 @@ from htmlvis import plantuml, plantuml_text_encoding, seqdiag
 def sample_request():
     return seqdiag.Message(
         category=seqdiag.Category.request,
-        src='Client',
-        dst='Server',
+        src='Client A',
+        dst='Server A',
         text='hi there',
         when=0.0,
         data='')
@@ -19,8 +19,8 @@ def sample_request():
 def sample_response():
     return seqdiag.Message(
         category=seqdiag.Category.response,
-        src='Server',
-        dst='Client',
+        src='Server A',
+        dst='Client A',
         text='hello',
         when=0.0,
         data='')
@@ -37,7 +37,7 @@ class TestTextualRepresentation(object):
             malformed_request = seqdiag.Message(
                 category=seqdiag.Category.request,
                 src='',
-                dst='Server',
+                dst='Server A',
                 text='hi there',
                 when=0.0,
                 data='')
@@ -46,12 +46,12 @@ class TestTextualRepresentation(object):
     def test_sources_are_quoted(self, sample_request):
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
-        assert '"Client"' in text_repr
+        assert '"Client A"' in text_repr
 
     def test_destinations_are_quoted(self, sample_request):
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
-        assert '"Server"' in text_repr
+        assert '"Server A"' in text_repr
 
     def test_double_quotes_in_source_name_are_converted_to_single_quotes(
             self, sample_request):
@@ -60,10 +60,17 @@ class TestTextualRepresentation(object):
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert r"This ' contains quotes'" in text_repr
 
+    def test_double_quotes_in_destination_name_are_converted_to_single_quotes(
+            self, sample_request):
+        sample_request.dst = 'This " contains quotes"'
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert r"This ' contains quotes'" in text_repr
+
     def test_a_request_is_drawn_with_solid_line(self, sample_request):
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
-        assert '"Client" -> "Server"' in text_repr
+        assert '"Client A" -> "Server A"' in text_repr
 
     def test_handles_two_messages(self, sample_request, sample_response):
         plantuml.html_image([sample_request, sample_response])
