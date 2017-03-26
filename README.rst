@@ -1,11 +1,6 @@
-===============================
+=======
 htmlvis
-===============================
-
-
-.. image:: https://img.shields.io/pypi/v/htmlvis.svg
-        :target: https://pypi.python.org/pypi/htmlvis
-        :alt: Pypi Status
+=======
 
 .. image:: https://img.shields.io/travis/qdamian/htmlvis.svg
         :target: https://travis-ci.org/qdamian/htmlvis
@@ -13,6 +8,10 @@ htmlvis
 
 .. image:: https://coveralls.io/repos/github/qdamian/htmlvis/badge.svg?branch=master
         :target: https://coveralls.io/github/qdamian/htmlvis?branch=master
+
+.. image:: https://www.quantifiedcode.com/api/v1/project/0bb0e06a69bf441191265e664e049fb0/badge.svg
+        :target: https://www.quantifiedcode.com/app/project/0bb0e06a69bf441191265e664e049fb0
+        :alt: Code issues
 
 .. image:: https://readthedocs.org/projects/htmlvis/badge/?version=latest
         :target: https://htmlvis.readthedocs.io/en/latest/?badge=latest
@@ -23,12 +22,12 @@ htmlvis
         :alt: Code Health
 
 .. image:: https://pyup.io/repos/github/qdamian/htmlvis/shield.svg
-     :target: https://pyup.io/repos/github/qdamian/htmlvis/
-     :alt: Updates
+        :target: https://pyup.io/repos/github/qdamian/htmlvis/
+        :alt: Updates
 
- .. image:: https://www.quantifiedcode.com/api/v1/project/0bb0e06a69bf441191265e664e049fb0/badge.svg
-     :target: https://www.quantifiedcode.com/app/project/0bb0e06a69bf441191265e664e049fb0
-     :alt: Code issues
+.. image:: https://img.shields.io/pypi/v/htmlvis.svg
+        :target: https://pypi.python.org/pypi/htmlvis
+        :alt: Pypi Status
 
 HTML visualization for Python
 
@@ -44,7 +43,10 @@ the amazing PlantUML_.
 Features
 --------
 
-* TODO
+* Support for Requests_
+* Formatting:
+  - Requests use solid lines
+  - Responses use dotted lines
 
 Usage
 -----
