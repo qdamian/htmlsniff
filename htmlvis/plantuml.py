@@ -1,7 +1,13 @@
 from . import plantuml_text_encoding
+from .seqdiag_model import Category
 import logging
 
 logger = logging.getLogger(__name__)
+
+MSG_TO_TEXTUAL_REPR = {
+    Category.request: '"{source}" -> "{destination}": {text}\n',
+    Category.response: '"{destination}" <-- "{source}": {text}\n',
+}
 
 
 def html_image(messages):
@@ -15,7 +21,7 @@ def html_image(messages):
 def _generate_textual_representation(messages):
     textual_repr = ''
     for msg in messages:
-        textual_repr += '"{source}" -> "{destination}"{text}\n'.format(
+        textual_repr += MSG_TO_TEXTUAL_REPR[msg.category].format(
             source=_sanitize(msg.src),
             destination=_sanitize(msg.dst),
             text=msg.text)

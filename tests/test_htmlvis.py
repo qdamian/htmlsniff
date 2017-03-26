@@ -46,33 +46,33 @@ def error_transaction():
             body='', elapsed=1.2, headers={}, status='404 Not Found'))
 
 
-class TestSaveSeqDiag(object):
+class TestRequestProcessingInSaveSeqDiag(object):
     def test_creates_a_request_message_from_the_transaction_request(
             self, mocker, successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
-        assert request_msg.category == htmlvis.seqdiag.Category.request
+        assert request_msg.category == htmlvis.seqdiag_model.Category.request
 
-    def test_the_client_is_the_message_source_in_requests(
-            self, mocker, successful_transaction):
+    def test_the_client_is_the_message_source(self, mocker,
+                                              successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
         assert request_msg.src == successful_transaction.client_name
 
-    def test_the_server_is_the_message_destination_in_requests(
-            self, mocker, successful_transaction):
+    def test_the_server_is_the_message_destination(self, mocker,
+                                                   successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
         assert request_msg.dst == successful_transaction.server_name
 
-    def test_the_url_is_passed_as_additional_data_in_requests(
-            self, mocker, successful_transaction):
+    def test_the_url_is_passed_as_additional_data(self, mocker,
+                                                  successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
@@ -80,32 +80,56 @@ class TestSaveSeqDiag(object):
         assert request_msg.data[
             'url'] == successful_transaction.request.url_path
 
+    @pytest.mark.parametrize(
+        'transaction, expected_method',
+        [(successful_transaction, 'PUT'), (error_transaction, 'GET')])
+    def test_includes_the_http_method_as_message_data(self, transaction,
+                                                      expected_method):
+        sniffer = Mock()
+        sniffer.transactions = [transaction()]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
+        assert request_msg.data['method'] == expected_method
+
+    @pytest.mark.parametrize('transaction, expected_text',
+                             [(successful_transaction, 'PUT /kindness'),
+                              (error_transaction, 'GET /rudeness')])
+    def test_combines_http_method_and_url_path_as_message_text(
+            self, transaction, expected_text):
+        sniffer = Mock()
+        sniffer.transactions = [transaction()]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
+        assert request_msg.text == expected_text
+
+
+class TestResponseProcessingInSaveSeqDiag(object):
     def test_creates_a_response_message_from_the_transaction_response(
             self, mocker, successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         response_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
-        assert response_msg.category == htmlvis.seqdiag.Category.response
+        assert response_msg.category == htmlvis.seqdiag_model.Category.response
 
-    def test_the_server_is_the_message_source_in_responses(
-            self, mocker, successful_transaction):
+    def test_the_server_is_the_message_source(self, mocker,
+                                              successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         response_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
         assert response_msg.src == successful_transaction.server_name
 
-    def test_the_client_is_the_message_destination_in_responses(
-            self, mocker, successful_transaction):
+    def test_the_client_is_the_message_destination(self, mocker,
+                                                   successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
         response_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
         assert response_msg.dst == successful_transaction.client_name
 
-    def test_the_status_is_passed_as_additional_data_in_responses(
-            self, mocker, successful_transaction):
+    def test_the_status_is_passed_as_additional_data(self, mocker,
+                                                     successful_transaction):
         sniffer = Mock()
         sniffer.transactions = [successful_transaction]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
@@ -113,6 +137,18 @@ class TestSaveSeqDiag(object):
         assert response_msg.data[
             'status'] == successful_transaction.response.status
 
+    @pytest.mark.parametrize('transaction, expected_text',
+                             [(successful_transaction, '200 OK'),
+                              (error_transaction, '404 Not Found')])
+    def test_uses_the_status_as_message_text(self, transaction, expected_text):
+        sniffer = Mock()
+        sniffer.transactions = [transaction()]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
+        assert request_msg.text == expected_text
+
+
+class TestTransactionProcessingInSaveSeqDiag(object):
     def test_passes_both_request_and_response_to_the_sequence_diagram_generator(
             self, successful_transaction):
         sniffer = Mock()
@@ -154,17 +190,6 @@ class TestSaveSeqDiag(object):
         htmlvis.save_seq_diag('/fake/path', [sniffer_a, sniffer_b])
         messages = htmlvis.seqdiag.draw.call_args[1]['messages']
         assert len(messages) == 4
-
-    @pytest.mark.parametrize(
-        'transaction, expected_method',
-        [(successful_transaction, 'PUT'), (error_transaction, 'GET')])
-    def test_includes_the_request_http_method_as_message_data(
-            self, transaction, expected_method):
-        sniffer = Mock()
-        sniffer.transactions = [transaction()]
-        htmlvis.save_seq_diag('/fake/path', [sniffer])
-        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
-        assert request_msg.data['method'] == expected_method
 
     def test_opens_the_output_file_path_for_writing(self, mocker,
                                                     successful_transaction):

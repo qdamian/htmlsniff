@@ -1,5 +1,5 @@
 from htmlvis import HTTPSniffer
-from pytest import fixture, mark, raises
+from pytest import raises
 
 
 class TestHTTPSniffer:

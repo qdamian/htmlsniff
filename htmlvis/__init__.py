@@ -13,4 +13,5 @@ from .requests_sniffer import RequestsSniffer
 if hasattr(sys, '_called_from_test'):
     from .htmlvis import HTTPSniffer, Transaction, Request, Response
     from .htmlvis import seqdiag
+    from .htmlvis import seqdiag_model
     from . import plantuml_text_encoding

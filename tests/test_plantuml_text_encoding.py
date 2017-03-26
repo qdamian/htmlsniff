@@ -164,11 +164,11 @@ def test_grouping_messages():
 
         Bob -> Alice: Authentication Failure
         group My own label
-        	Alice -> Log : Log attack start
+            Alice -> Log : Log attack start
             loop 1000 times
                 Alice -> Bob: DNS Attack
             end
-        	Alice -> Log : Log attack end
+            Alice -> Log : Log attack end
         end
 
     else Another type of failure
@@ -177,7 +177,7 @@ def test_grouping_messages():
 
     end
     '''
-    expected = 'ZP51JWCn34NNp2d-1P26RHT8GOWL84HFu6Oy9MeQXyHHrTkJJDk1KLdKYoZIV_wMlplKCjvPnlqZdcIpWYdwnK6T9NKIyCdVXRDsNIF9AtAnbdCUYuUbp2UXLUrk9fFRbOsfJL5vEE7iCoFBdh5pOO2C6CdvacvrUpdJ5tYRf4Iy7I6704yRzhDqDs_tAbkiffTKoUwGbPBEO2il4l7GzptKxJaljEkadj_NC9FL0kGmt3BzBzR-ly6O87NR13r6_Y-RPJGVdkiPa3WodSzqiVu1'
+    expected = 'ZP51RW8n34NtSuf_WKh3baMbe8fLYr1xWf3nq8WGfx6ZYjkJ6Q1jH1Tu4KNwpr_sTuTQ9dX7U7h6YdTBcAAV5DKxgvuZtkcha6ZNJQGD2YdEaSXO0fmLkWXJrUx9P7Qxip6rAIaD5vo248IFX8EF0tZ4Q7qe-L6tzPM-mVlC9U7j1FwE27P7uKTg5dpbFPRpQrMjEq3KPctOm9omwFiUweyaZNOVrilc0sQsQa2AmuC3_2Md_syy9dBTEKDFYVvBg0re6wWU0vaIsUknRjPd'
     assert plantuml_text_encoding.encode(diagram) == expected
 
 
@@ -191,12 +191,12 @@ def test_notes_on_diagrams():
 
     Bob->Bob : I am thinking
     note left
-    	a note
-    	can also be defined
-    	on several lines
+        a note
+        can also be defined
+        on several lines
     end note
     '''
-    expected = 'NOr13iCW30JFvHNxWNmWXqZjhSzmWWbMN2C1wljBu92sbW_shiVhqEgkil6qFDAA6P5LapjbIvMX7EgC6gMWDI58BhLRhXyrQ5hwWyQcumApxF6RR6Ba_4-Ep2VeTLxQ8RR_PlVjHeFhyqO6qfAmCZm7CVR3I8R2RywaqAQMhhBvY_q0'
+    expected = 'NOr13eCm30JlUSL-W0zmG6flVKOWXbYuZfH4VN-T84hRbI_UtR4TJ3VXXORfdcQCY2IINBCrLOBGMaVKo0Ks7YldKdlaUicWOUe7Z4tx1MRUuZTfPgJyJnu_7_3FrjITTVlztRScVw3dkdY5bv8m4mAjh1G-ML8KUb7s0h6Wz80qN1VU'
     assert plantuml_text_encoding.encode(diagram) == expected
 
 
@@ -205,8 +205,8 @@ def test_notes_relative_to_participants():
     participant Alice
     participant Bob
     note left of Alice #aqua
-    	This is displayed
-    	left of Alice.
+        This is displayed
+        left of Alice.
     end note
 
     note right of Alice: This is displayed right of Alice.
@@ -216,12 +216,12 @@ def test_notes_relative_to_participants():
     note over Alice, Bob #FFAAAA: This is displayed\n over Bob and Alice.
 
     note over Bob, Alice
-    	This is yet another
-    	example of
-    	a long note.
+        This is yet another
+        example of
+        a long note.
     end note
     '''
-    expected = 'TL1B3i8W45tRKqpIRTC3kAkBdi2bcx4T2Wa2KZJszWwGs8frmcRUByEhWCUX3sfG3as0Jgk1gX8zsMl2Z0q4caG0Ax8KQhm_C967irGpy1lLx3GkD6RuIzycZCoOigerrQj9hh8Z_8GLYdRZjK_o_tqhk-zfulUWxlkEPoVWOh8ugf0FtuzYjjcqzobZeS0k6oJvJD0BRqwpI-GTGLipfQIYdBYy0G00'
+    expected = 'TL1B3eCW4DrpYadS6W_GdLruWYwxcUeW91GeqgRUlWCcIgrzOSFx1Pu0XiSGTQyzsWYjqJs9FNjsjynP5maCoGXEBbQeyF74B2PSb9w0pw0dRt2cOLM-KascoGwvKMpTGOzgivr--tQEfiYw5uN_kKqzpjJfar1rNSiuABZQnPnSo0y_hcArBZOi9vafSj15HM7Lw8rtRpWhLmh1E3lcojrAwV81'
     assert plantuml_text_encoding.encode(diagram) == expected
 
 

@@ -5,7 +5,7 @@ import attr
 import requests
 import responses
 from htmlvis import HTTPSniffer, RequestsSniffer
-from pytest import fixture, mark, raises
+from pytest import fixture, mark
 
 
 @fixture
@@ -56,7 +56,7 @@ def test_intercepts_two_requests(success_response):
 @responses.activate
 def test_records_the_request_method(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -66,7 +66,7 @@ def test_records_the_request_method(success_response):
 @responses.activate
 def test_records_the_request_url_path(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -80,7 +80,7 @@ def test_records_the_request_url_path(success_response):
 def test_transactions_are_json_serializable(url, response_fixture):
     response_fixture()
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(url, hooks={'response': sniffing_hook})
+    requests.get(url, hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
     json.dumps(attr.asdict(transaction))
 
@@ -88,7 +88,7 @@ def test_transactions_are_json_serializable(url, response_fixture):
 @responses.activate
 def test_records_the_request_headers(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         headers={'Accept': 'application/json',
                  'Better-Safe': 'Than/Sorry'},
@@ -101,7 +101,7 @@ def test_records_the_request_headers(success_response):
 @responses.activate
 def test_records_the_request_body_if_content_type_is_json(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         json={'Better safe': 'Than sorry'},
         hooks={'response': sniffing_hook})
@@ -113,7 +113,7 @@ def test_records_the_request_body_if_content_type_is_json(success_response):
 @responses.activate
 def test_records_the_request_body_if_content_is_plain_text(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         data='Better safe than sorry',
         hooks={'response': sniffing_hook})
@@ -156,7 +156,7 @@ def test_measures_elapsed_time_for_two_transactions(mocker):
         hooks={'response': sniffing_hook})
     second_elapsed_time = time.time() - start_time
     response.raise_for_status()
-    first_transaction = sniffing_hook.transactions[0]
+    sniffing_hook.transactions[0]
     second_transaction = sniffing_hook.transactions[1]
     assert first_elapsed_time <= second_transaction.request.elapsed <= second_elapsed_time
     assert first_elapsed_time <= second_transaction.response.elapsed <= second_elapsed_time
@@ -174,7 +174,7 @@ def test_records_the_response_headers():
         })
 
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -189,7 +189,7 @@ def test_records_the_response_body_if_content_type_is_json():
         'http://mysniffer.com/api/1/success',
         json={'Better safe': 'Than sorry'})
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -203,7 +203,7 @@ def test_records_the_response_body_if_content_is_plain_text():
         'http://mysniffer.com/api/1/success',
         body='Better safe than sorry')
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -213,7 +213,7 @@ def test_records_the_response_body_if_content_is_plain_text():
 @responses.activate
 def test_records_the_response_status_for_a_success_response(success_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -223,7 +223,7 @@ def test_records_the_response_status_for_a_success_response(success_response):
 @responses.activate
 def test_records_the_response_status_for_an_error_response(error_response):
     sniffing_hook = RequestsSniffer('', '')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/notfound',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -233,7 +233,7 @@ def test_records_the_response_status_for_an_error_response(error_response):
 @responses.activate
 def test_transaction_includes_the_client_and_server_name(success_response):
     sniffing_hook = RequestsSniffer('Client name', 'Server name')
-    response = requests.get(
+    requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
     transaction = sniffing_hook.transactions[0]
@@ -254,14 +254,13 @@ def test_restart_resets_the_elapsed_time(mocker):
         hooks={'response': sniffing_hook})
     time.time.return_value = 2.0
     success_response()
-    first_elapsed_time = time.time() - start_time
+    time.time() - start_time
     first_transaction = sniffing_hook.transactions[0]
     sniffing_hook.restart()
     time.time.return_value = 2.2
     response = requests.get(
         'http://mysniffer.com/api/1/success',
         hooks={'response': sniffing_hook})
-    second_elapsed_time = time.time() - start_time
     response.raise_for_status()
     second_transaction = sniffing_hook.transactions[0]
     assert second_transaction.request.elapsed < first_transaction.response.elapsed

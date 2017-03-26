@@ -1,13 +1,11 @@
-import re
-
 import pytest
-from htmlvis import plantuml, plantuml_text_encoding, seqdiag
+from htmlvis import plantuml, plantuml_text_encoding, seqdiag_model
 
 
 @pytest.fixture
 def sample_request():
-    return seqdiag.Message(
-        category=seqdiag.Category.request,
+    return seqdiag_model.Message(
+        category=seqdiag_model.Category.request,
         src='Client A',
         dst='Server A',
         text='hi there',
@@ -17,8 +15,8 @@ def sample_request():
 
 @pytest.fixture
 def sample_response():
-    return seqdiag.Message(
-        category=seqdiag.Category.response,
+    return seqdiag_model.Message(
+        category=seqdiag_model.Category.response,
         src='Server A',
         dst='Client A',
         text='hello',
@@ -34,8 +32,8 @@ def mock_plantuml(mocker):
 class TestTextualRepresentation(object):
     def test_source_is_mandatory(self, sample_request):
         with pytest.raises(ValueError):
-            malformed_request = seqdiag.Message(
-                category=seqdiag.Category.request,
+            malformed_request = seqdiag_model.Message(
+                category=seqdiag_model.Category.request,
                 src='',
                 dst='Server A',
                 text='hi there',
@@ -78,11 +76,17 @@ class TestTextualRepresentation(object):
         assert 'hi there' in text_repr
         assert 'hello' in text_repr
 
-    def test_returns_an_img_element(self, sample_request):
-        img_element = plantuml.html_image([sample_request])
-        assert re.match('<img.*>', img_element)
+    def test_request_syntax(self, sample_request):
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert text_repr == '"Client A" -> "Server A": hi there\n'
 
     def test_returns_an_img_element(self, sample_request):
         plantuml_text_encoding.encode.return_value = 'lalala'
         img_element = plantuml.html_image([sample_request])
         assert img_element == '<img src="http://www.plantuml.com/plantuml/svg/lalala">'
+
+    def test_a_response_is_drawn_with_a_dotted_line(self, sample_response):
+        plantuml.html_image([sample_response])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert '"Client A" <-- "Server A"' in text_repr

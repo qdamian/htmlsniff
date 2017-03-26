@@ -1,6 +1,7 @@
 from attr import attrib, attrs
 
 from . import seqdiag
+from . import seqdiag_model
 
 
 class HTTPSniffer(object):
@@ -64,26 +65,23 @@ def save_seq_diag(output_file_path, sniffers):
 
 
 def _convert_to_seq_diag_messages(transaction):
-    msgs = []
-    msgs += [
-        seqdiag.Message(
-            category=seqdiag.Category.request,
-            src=transaction.client_name,
-            dst=transaction.server_name,
-            text='',
-            when=transaction.request.elapsed,
-            data={
-                'method': transaction.request.method,
-                'url': transaction.request.url_path,
-            })
-    ]
-    msgs += [
-        seqdiag.Message(
-            category=seqdiag.Category.response,
-            src=transaction.server_name,
-            dst=transaction.client_name,
-            text='',
-            when=transaction.response.elapsed,
-            data={'status': transaction.response.status})
-    ]
-    return msgs
+    request = transaction.request
+    request_msg = seqdiag_model.Message(
+        category=seqdiag_model.Category.request,
+        src=transaction.client_name,
+        dst=transaction.server_name,
+        text='%s %s' % (request.method, request.url_path),
+        when=request.elapsed,
+        data={
+            'method': request.method,
+            'url': request.url_path,
+        })
+    response = transaction.response
+    response_msg = seqdiag_model.Message(
+        category=seqdiag_model.Category.response,
+        src=transaction.server_name,
+        dst=transaction.client_name,
+        text=response.status,
+        when=response.elapsed,
+        data={'status': response.status})
+    return [request_msg, response_msg]
