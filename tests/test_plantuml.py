@@ -10,6 +10,7 @@ def sample_request():
         dst='Server A',
         text='hi there',
         when=0.0,
+        note='multi\nline',
         data='')
 
 
@@ -21,6 +22,7 @@ def sample_response():
         dst='Client A',
         text='hello',
         when=0.0,
+        note='multi\nline',
         data='')
 
 
@@ -37,6 +39,7 @@ class TestTextualRepresentation(object):
                 src='',
                 dst='Server A',
                 text='hi there',
+                note='',
                 when=0.0,
                 data='')
             plantuml.html_image([malformed_request])
@@ -70,6 +73,24 @@ class TestTextualRepresentation(object):
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert '"Client A" -> "Server A"' in text_repr
 
+    def test_request_notes_are_drawn_at_the_right_of_the_destination(
+            self, sample_request):
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert 'note right\n    multi\n    line\nend note' in text_repr
+
+    def test_no_note_is_added_if_request_has_no_notes(self, sample_request):
+        sample_request.note = None
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert 'note' not in text_repr
+
+    def test_empty_notes_are_not_added(self, sample_request):
+        sample_request.note = ''
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert 'note' not in text_repr
+
     def test_handles_two_messages(self, sample_request, sample_response):
         plantuml.html_image([sample_request, sample_response])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
@@ -79,7 +100,7 @@ class TestTextualRepresentation(object):
     def test_request_syntax(self, sample_request):
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
-        assert text_repr == '"Client A" -> "Server A": hi there\n'
+        assert '"Client A" -> "Server A": hi there\n' in text_repr
 
     def test_returns_an_img_element(self, sample_request):
         plantuml_text_encoding.encode.return_value = 'lalala'
@@ -90,3 +111,9 @@ class TestTextualRepresentation(object):
         plantuml.html_image([sample_response])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert '"Client A" <-- "Server A"' in text_repr
+
+    def test_response_notes_are_drawn_at_the_left_of_the_destination(
+            self, sample_response):
+        plantuml.html_image([sample_response])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert 'note left\n    multi\n    line\nend note' in text_repr

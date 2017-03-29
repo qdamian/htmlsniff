@@ -22,13 +22,13 @@ def successful_transaction():
         client_name='The Client',
         server_name='The Server',
         request=htmlvis.Request(
-            body='',
+            body='request body',
             elapsed=0.1,
             headers={},
             method='PUT',
             url_path='/kindness'),
         response=htmlvis.Response(
-            body='', elapsed=0.2, headers={}, status='200 OK'))
+            body='response body', elapsed=0.2, headers={}, status='200 OK'))
 
 
 @pytest.fixture
@@ -37,13 +37,16 @@ def error_transaction():
         client_name='The Client',
         server_name='The Server',
         request=htmlvis.Request(
-            body='',
+            body='request body',
             elapsed=1.1,
             headers={},
             method='GET',
             url_path='/rudeness'),
         response=htmlvis.Response(
-            body='', elapsed=1.2, headers={}, status='404 Not Found'))
+            body='response body',
+            elapsed=1.2,
+            headers={},
+            status='404 Not Found'))
 
 
 class TestRequestProcessingInSaveSeqDiag(object):
@@ -79,6 +82,13 @@ class TestRequestProcessingInSaveSeqDiag(object):
         request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
         assert request_msg.data[
             'url'] == successful_transaction.request.url_path
+
+    def test_the_body_is_passed_as_note(self, mocker, successful_transaction):
+        sniffer = Mock()
+        sniffer.transactions = [successful_transaction]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][0]
+        assert request_msg.note == successful_transaction.request.body
 
     @pytest.mark.parametrize(
         'transaction, expected_method',
@@ -144,8 +154,15 @@ class TestResponseProcessingInSaveSeqDiag(object):
         sniffer = Mock()
         sniffer.transactions = [transaction()]
         htmlvis.save_seq_diag('/fake/path', [sniffer])
-        request_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
-        assert request_msg.text == expected_text
+        response_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
+        assert response_msg.text == expected_text
+
+    def test_the_body_is_passed_as_note(self, mocker, successful_transaction):
+        sniffer = Mock()
+        sniffer.transactions = [successful_transaction]
+        htmlvis.save_seq_diag('/fake/path', [sniffer])
+        response_msg = htmlvis.seqdiag.draw.call_args[1]['messages'][1]
+        assert response_msg.note == successful_transaction.response.body
 
 
 class TestTransactionProcessingInSaveSeqDiag(object):

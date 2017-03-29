@@ -71,6 +71,7 @@ def _convert_to_seq_diag_messages(transaction):
         src=transaction.client_name,
         dst=transaction.server_name,
         text='%s %s' % (request.method, request.url_path),
+        note=request.body,
         when=request.elapsed,
         data={
             'method': request.method,
@@ -82,6 +83,7 @@ def _convert_to_seq_diag_messages(transaction):
         src=transaction.server_name,
         dst=transaction.client_name,
         text=response.status,
+        note=response.body,
         when=response.elapsed,
         data={'status': response.status})
     return [request_msg, response_msg]

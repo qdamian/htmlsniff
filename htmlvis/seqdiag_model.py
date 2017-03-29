@@ -17,5 +17,6 @@ class Message(object):
     src = attrib(validator=assert_not_empty)
     dst = attrib()
     text = attrib()
+    note = attrib()
     when = attrib()
     data = attrib(default=Factory(dict))

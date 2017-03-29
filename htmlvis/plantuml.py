@@ -1,6 +1,11 @@
+"""
+Generate http://plantuml.com/sequence-diagram
+"""
+import logging
+import textwrap
+
 from . import plantuml_text_encoding
 from .seqdiag_model import Category
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -8,9 +13,16 @@ MSG_TO_TEXTUAL_REPR = {
     Category.request: '"{source}" -> "{destination}": {text}\n',
     Category.response: '"{destination}" <-- "{source}": {text}\n',
 }
+NOTE_LOCATION = {
+    Category.request: 'right',
+    Category.response: 'left',
+}
 
 
 def html_image(messages):
+    """
+    Generate an HTML img element with an SVG sequence diagram
+    """
     logger.debug('Generating sequence diagram')
     textual_repr = _generate_textual_representation(messages)
     encoded_repr = plantuml_text_encoding.encode(textual_repr)
@@ -25,8 +37,15 @@ def _generate_textual_representation(messages):
             source=_sanitize(msg.src),
             destination=_sanitize(msg.dst),
             text=msg.text)
+        if msg.note:
+            textual_repr += 'note ' + NOTE_LOCATION[
+                msg.category] + '\n' + _indent(msg.note) + '\nend note'
     return textual_repr
 
 
 def _sanitize(participant):
     return participant.replace('"', "'")
+
+
+def _indent(text):
+    return '    ' + '\n    '.join(text.splitlines())
