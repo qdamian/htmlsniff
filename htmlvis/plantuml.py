@@ -2,7 +2,6 @@
 Generate http://plantuml.com/sequence-diagram
 """
 import logging
-import textwrap
 
 from . import plantuml_text_encoding
 from .seqdiag_model import Category
