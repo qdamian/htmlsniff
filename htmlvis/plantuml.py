@@ -1,10 +1,17 @@
 """
 Generate http://plantuml.com/sequence-diagram
 """
+import json
 import logging
+from collections import OrderedDict
 
 from . import plantuml_text_encoding
 from .seqdiag_model import Category
+
+try:
+    from contextlib import suppress
+except ImportError:
+    from contextlib2 import suppress
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +44,11 @@ def _generate_textual_representation(messages):
             destination=_sanitize(msg.dst),
             text=msg.text)
         if msg.note:
+            with suppress(ValueError):
+                msg.note = json.dumps(
+                    json.loads(msg.note, object_pairs_hook=OrderedDict),
+                    indent=4,
+                    sort_keys=False)
             textual_repr += 'note ' + NOTE_LOCATION[
                 msg.category] + '\n' + _indent(msg.note) + '\nend note'
     return textual_repr

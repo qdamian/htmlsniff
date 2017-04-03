@@ -1,3 +1,4 @@
+import json
 import pytest
 from htmlvis import plantuml, plantuml_text_encoding, seqdiag_model
 
@@ -117,3 +118,13 @@ class TestTextualRepresentation(object):
         plantuml.html_image([sample_response])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert 'note left\n    multi\n    line\nend note' in text_repr
+
+    def test_json_notes_are_pretty_formatted(self, sample_request):
+        sample_request.note = '{"name": "John", "age": 33}'
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        # json dumps adds a trailing space in Python 2. https://bugs.python.org/issue16333
+        try:
+            assert '    {\n        "name": "John",\n        "age": 33\n    }' in text_repr
+        except AssertionError:
+            assert '    {\n        "name": "John", \n        "age": 33\n    }' in text_repr
