@@ -44,7 +44,7 @@ Features
 --------
 
 * Support for Requests_
-* `formatting`_
+* `Formatting`_
 
 Usage
 -----
@@ -94,4 +94,4 @@ The initial version of this package was created with Cookiecutter_ and the `audr
 .. _Requests: http://docs.python-requests.org
 .. _activity_recommendations_service.py: examples/recommendations_service/activity_recommendations_service.py
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-.. _`formatting`: formatting.rst
+.. _`Formatting`: docs/formatting.rst

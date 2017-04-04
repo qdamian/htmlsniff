@@ -124,7 +124,18 @@ class TestTextualRepresentation(object):
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         # json dumps adds a trailing space in Python 2. https://bugs.python.org/issue16333
-        try:
-            assert '    {\n        "name": "John",\n        "age": 33\n    }' in text_repr
-        except AssertionError:
-            assert '    {\n        "name": "John", \n        "age": 33\n    }' in text_repr
+        text_repr = text_repr.replace(' \n', '\n')
+        assert '    {\n        "name": "John",\n        "age": 33\n    }' in text_repr
+
+    @pytest.mark.parametrize('json_note, formatted_note', [
+        ('{"a": 2, "b": 1}', '    {\n        "a": 2,\n        "b": 1\n    }'),
+        ('{"b": 1, "a": 2}', '    {\n        "b": 1,\n        "a": 2\n    }')
+    ])
+    def test_json_formatting_preserves_items_order(self, sample_request,
+                                                   json_note, formatted_note):
+        sample_request.note = json_note
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        # json dumps adds a trailing space in Python 2. https://bugs.python.org/issue16333
+        text_repr = text_repr.replace(' \n', '\n')
+        assert formatted_note in text_repr
