@@ -3,9 +3,8 @@ Generate http://plantuml.com/sequence-diagram
 """
 import logging
 
-from . import plantuml_text_encoding
+from . import formatting, plantuml_text_encoding
 from .seqdiag_model import Category
-from .formatter import prettify_json
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +36,11 @@ def _generate_textual_representation(messages):
             source=_sanitize(msg.src),
             destination=_sanitize(msg.dst),
             text=msg.text)
-        prettify_json(msg)
+        formatters = [
+            formatting.prettify_json, formatting.shorten_long_strings
+        ]
+        for fmt in formatters:
+            fmt(msg)
         if msg.note:
             textual_repr += 'note ' + NOTE_LOCATION[
                 msg.category] + '\n' + _indent(msg.note) + '\nend note'

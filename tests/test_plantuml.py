@@ -69,11 +69,6 @@ class TestTextualRepresentation(object):
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
         assert r"This ' contains quotes'" in text_repr
 
-    def test_a_request_is_drawn_with_solid_line(self, sample_request):
-        plantuml.html_image([sample_request])
-        text_repr = plantuml_text_encoding.encode.call_args[0][0]
-        assert '"Client A" -> "Server A"' in text_repr
-
     def test_request_notes_are_drawn_at_the_right_of_the_destination(
             self, sample_request):
         plantuml.html_image([sample_request])
@@ -108,6 +103,13 @@ class TestTextualRepresentation(object):
         img_element = plantuml.html_image([sample_request])
         assert img_element == '<img src="http://www.plantuml.com/plantuml/svg/lalala">'
 
+
+class TestFormatting(object):
+    def test_a_request_is_drawn_with_solid_line(self, sample_request):
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        assert '"Client A" -> "Server A"' in text_repr
+
     def test_a_response_is_drawn_with_a_dotted_line(self, sample_response):
         plantuml.html_image([sample_response])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
@@ -133,6 +135,21 @@ class TestTextualRepresentation(object):
     ])
     def test_json_formatting_preserves_items_order(self, sample_request,
                                                    json_note, formatted_note):
+        sample_request.note = json_note
+        plantuml.html_image([sample_request])
+        text_repr = plantuml_text_encoding.encode.call_args[0][0]
+        # json dumps adds a trailing space in Python 2. https://bugs.python.org/issue16333
+        text_repr = text_repr.replace(' \n', '\n')
+        assert formatted_note in text_repr
+
+    @pytest.mark.parametrize(
+        'json_note, formatted_note',
+        [('{"This is a very long string": 2}',
+          '    {\n        "This is a very ...": 2\n    }'),
+         ('{"b": "This is a very long string"}',
+          '    {\n        "b": "This is a very ..."\n    }')])
+    def test_long_strings_are_truncated(self, sample_request, json_note,
+                                        formatted_note):
         sample_request.note = json_note
         plantuml.html_image([sample_request])
         text_repr = plantuml_text_encoding.encode.call_args[0][0]
