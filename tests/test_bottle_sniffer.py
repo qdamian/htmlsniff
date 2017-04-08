@@ -51,7 +51,7 @@ class TestSucessfulTransactions():
         app.install(sniffer)
         test_app.post('/name', 'Michael')
         request = sniffer.transactions[0].request
-        assert request.body == "Michael"
+        assert request.body == b"Michael"
 
 
 class TestErrorTransactions():
