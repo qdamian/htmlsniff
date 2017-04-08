@@ -9,6 +9,7 @@ import sys
 # flake8: noqa: F401 imported but unused
 from .htmlvis import save_seq_diag
 from .requests_sniffer import RequestsSniffer
+from .bottle_sniffer import BottleSniffer
 
 if hasattr(sys, '_called_from_test'):
     from .htmlvis import HTTPSniffer, Transaction, Request, Response
