@@ -86,6 +86,24 @@ class TestSuccessfulTransactions():
         assert request.headers['Content-Type'] == 'application/json'
         assert request.headers['Some-Header'] == 'Some value'
 
+    @pytest.mark.parametrize('method_call, method_name',
+                             [('get', 'GET'), ('post', 'POST')])
+    def test_the_request_method_is_captured(self, method_call, method_name):
+        test_app = webtest.TestApp(app)
+        sniffer = BottleSniffer()
+        app.install(sniffer)
+        getattr(test_app, method_call)('/success')
+        request = sniffer.transactions[0].request
+        assert request.method == method_name
+
+    def test_the_url_path_is_captured(self):
+        test_app = webtest.TestApp(app)
+        sniffer = BottleSniffer()
+        app.install(sniffer)
+        test_app.get('/success')
+        request = sniffer.transactions[0].request
+        assert request.url_path == '/success'
+
 
 class TestErrorTransactions():
     def test_sniffer_does_not_interfere(self):
@@ -150,3 +168,26 @@ class TestErrorTransactions():
         # not comparing dictionaries because WebTest adds extra headers
         assert request.headers['Content-Type'] == 'application/json'
         assert request.headers['Some-Header'] == 'Some value'
+
+    @pytest.mark.parametrize('method_call, method_name',
+                             [('get', 'GET'), ('post', 'POST')])
+    @pytest.mark.parametrize('url', ['/error', '/exception'])
+    def test_the_request_method_is_captured(self, url, method_call,
+                                            method_name):
+        test_app = webtest.TestApp(app)
+        sniffer = BottleSniffer()
+        app.install(sniffer)
+        with pytest.raises(webtest.app.AppError):
+            getattr(test_app, method_call)('/error')
+        request = sniffer.transactions[0].request
+        assert request.method == method_name
+
+    @pytest.mark.parametrize('url', ['/error', '/exception'])
+    def test_the_url_path_is_captured(self, url):
+        test_app = webtest.TestApp(app)
+        sniffer = BottleSniffer()
+        app.install(sniffer)
+        with pytest.raises(webtest.app.AppError):
+            test_app.get(url)
+        request = sniffer.transactions[0].request
+        assert request.url_path == url

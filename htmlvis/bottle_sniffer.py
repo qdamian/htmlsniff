@@ -44,5 +44,5 @@ class BottleSniffer(HTTPSniffer):
             body=bottle.request.body.read(),
             elapsed=elapsed_time,
             headers=headers,
-            method=None,
-            url_path=None)
+            method=context['method'],
+            url_path=bottle.request.path)
